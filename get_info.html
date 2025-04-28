@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>search</title>
+    <link rel="stylesheet" href="get_info.css">
+</head>
+<body>
+    <form id="newsForm" class="mb-4">
+        <div class="input-group">
+          <input type="text" id="searchQuery" class="form-control" placeholder="Search for news..." required>
+          <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+      </form>
+      <div id="mainDiv"></div>
+    <!-- <script src="get_info.js"></script> -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('newsForm');
+      // Form submission listener
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const query = document.getElementById('searchQuery').value;
+        console.log(query);
+       loadNews(query);
+      });
+    });
+  
+    function loadNews(query) {
+      const mainDiv = document.getElementById('mainDiv');
+      mainDiv.innerHTML = ''; // Clear previous results
+  
+      fetch('http://127.0.0.1:5000/news', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query }) // "{query:query}"
+      })
+        .then(response => response.json())
+        .then(result => {
+          for (let news of result.articles) {
+            mainDiv.innerHTML = mainDiv.innerHTML + `
+              <div class='col-md-4'>
+                <div class='card mb-3'> 
+                  <img src='${news.urlToImage}' class="img-fluid card-img-top" onerror="this.style.display='none'">
+                  <div class="card-body">
+                    <h5 class="card-title">
+                      <a href="${news.url}" target="_blank">${news.title}</a>
+                    </h5>
+                  </div>
+                </div>
+              </div>`;
+          }
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          mainDiv.innerHTML = "<p class='text-danger'>Failed to load news. Try again later.</p>";
+        });
+    }
+  </script>
+        
+    </body>
+</html>
