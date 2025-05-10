@@ -18,6 +18,7 @@ class Domains(db.Model):
     def __repr__(self):
         return f"<Domain {self.domain_name}>"
     
+    
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)

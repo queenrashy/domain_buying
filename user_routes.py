@@ -239,6 +239,7 @@ def upload_image():
     return jsonify({'success': True, 'message': 'File uploaded successfully!'}), 201
 
 # make a route to list all the file that user upload and be able to delete it
+# list of pictures
 @app.route('/get-upload')
 @auth.login_required  
 def get_list_image():
